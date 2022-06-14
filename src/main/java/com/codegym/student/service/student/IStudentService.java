@@ -8,4 +8,10 @@ public interface IStudentService extends IGeneralService<Student> {
     Iterable<Student> findAllByClazz(Clazz clazz);
 
     Iterable<Student> findAllByOrderByMark();
+
+    Iterable<Student> findAllByNameContaining(String name);
+
+    Iterable<Student> findAllByMarkBetween(double from, double to);
+
+    Iterable<Student>findTop3Students();
 }

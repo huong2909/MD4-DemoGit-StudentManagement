@@ -13,9 +13,6 @@ public class StudentService implements IStudentService {
     @Autowired
     IStudentRepository studentRepository;
 
-public class StudentService implements IStudentService{
-@Autowired
-    IStudentRepository studentRepository;
     @Override
     public Iterable<Student> findAll() {
         return studentRepository.findAll();
@@ -33,7 +30,7 @@ public class StudentService implements IStudentService{
 
     @Override
     public void remove(Long id) {
-studentRepository.deleteById(id);
+        studentRepository.deleteById(id);
     }
 
     @Override
@@ -45,4 +42,20 @@ studentRepository.deleteById(id);
     public Iterable<Student> findAllByOrderByMark() {
         return studentRepository.findAllByOrderByMark();
     }
+
+    @Override
+    public Iterable<Student> findAllByNameContaining(String name) {
+        return studentRepository.findAllByNameContaining(name);
+    }
+
+    @Override
+    public Iterable<Student> findAllByMarkBetween(double from, double to) {
+        return studentRepository.findAllByMarkBetween(from,to);
+    }
+
+    @Override
+    public Iterable<Student> findTop3Students() {
+        return studentRepository.findTop3Students();
+    }
 }
+
