@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class StudentController {
     @Autowired
     IStudentService studentService;
+
     @GetMapping("")
-    public ResponseEntity<Iterable<Student>> findAll(){
-return new ResponseEntity<>(studentService.findAll(), HttpStatus.OK);
+    public ResponseEntity<Iterable<Student>> findAll() {
+        return new ResponseEntity<>(studentService.findAll(), HttpStatus.OK);
     }
 }
