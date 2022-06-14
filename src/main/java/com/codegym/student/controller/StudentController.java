@@ -21,4 +21,9 @@ public class StudentController {
     public ResponseEntity<Iterable<Student>> findAll() {
         return new ResponseEntity<>(studentService.findAll(), HttpStatus.OK);
     }
+    @GetMapping("/sortByMark")
+    public ResponseEntity<Iterable<Student>> findAllByOrderByPrice() {
+        Iterable<Student> students = studentService.findAllByOrderByMark();
+        return new ResponseEntity<>(students, HttpStatus.OK);
+    }
 }
