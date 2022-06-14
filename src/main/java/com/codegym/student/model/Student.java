@@ -11,14 +11,14 @@ public class Student {
     private String name;
     private int age;
     private String image;
-    private int mark;
+    private double mark;
     @ManyToOne
     private Clazz clazz;
 
     public Student() {
     }
 
-    public Student(Long id, String name, int age, String image, int mark, Clazz clazz) {
+    public Student(Long id, String name, int age, String image, double mark, Clazz clazz) {
         this.id = id;
         this.name = name;
         this.age = age;
@@ -27,7 +27,7 @@ public class Student {
         this.clazz = clazz;
     }
 
-    public int getMark() {
+    public double getMark() {
         return mark;
     }
 
