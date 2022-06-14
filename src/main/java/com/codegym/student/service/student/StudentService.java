@@ -1,9 +1,10 @@
 package com.codegym.student.service.student;
 
 import com.codegym.student.model.Student;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
+@Service
 public class StudentService implements IStudentService{
     @Override
     public Iterable<Student> findAll() {

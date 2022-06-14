@@ -11,18 +11,28 @@ public class Student {
     private String name;
     private int age;
     private String image;
+    private int mark;
     @ManyToOne
     private Clazz clazz;
 
     public Student() {
     }
 
-    public Student(Long id, String name, int age, String image, Clazz clazz) {
+    public Student(Long id, String name, int age, String image, int mark, Clazz clazz) {
         this.id = id;
         this.name = name;
         this.age = age;
         this.image = image;
+        this.mark = mark;
         this.clazz = clazz;
+    }
+
+    public int getMark() {
+        return mark;
+    }
+
+    public void setMark(int mark) {
+        this.mark = mark;
     }
 
     public Long getId() {

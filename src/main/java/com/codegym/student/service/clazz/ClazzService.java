@@ -1,9 +1,10 @@
 package com.codegym.student.service.clazz;
 
 import com.codegym.student.model.Clazz;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
+@Service
 public class ClazzService implements IClazzService{
     @Override
     public Iterable<Clazz> findAll() {
