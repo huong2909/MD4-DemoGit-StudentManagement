@@ -26,4 +26,5 @@ public class StudentController {
         Iterable<Student> students = studentService.findAllByOrderByMark();
         return new ResponseEntity<>(students, HttpStatus.OK);
     }
+
 }
