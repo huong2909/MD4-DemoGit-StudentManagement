@@ -31,7 +31,7 @@ public class Student {
         return mark;
     }
 
-    public void setMark(double mark) {
+    public void setMark(int mark) {
         this.mark = mark;
     }
 

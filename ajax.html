@@ -90,6 +90,15 @@
     </div>
 
 </div>
+<div id="main"></div>
+<form enctype="multipart/form-data" id="form">
+    <input type="text" name="name">
+    <input type="number" name="age">
+    <input type="number" name="mark">
+    <input type="number" name="clazz">
+    <input type="file" name="file"/>
+    <button type="button" onclick="submitForm()">Upload</button>
+</form>
 </body>
 <script>
     let display = document.getElementById("display");
@@ -105,7 +114,7 @@
                     <td >${data[i].id}</td>
                     <td class="left">${data[i].name}</td>
                     <td>${data[i].age}</td>
-                    <td>${data[i].image}</td>
+                    <td><img style="height: 100px;width: 100px" src="\\image\\${data[i].image}"></td>
                     <td>${data[i].mark}</td>
                     <td>${data[i].clazz.name}</td>
                     <td><button class="btn btn-success" onclick="deleteStudent(${data[i].id})"><i class="bi bi-trash3-fill"></i></button></td>
@@ -120,6 +129,26 @@
         });
     }
 
+    function submitForm() {
+        let form = document.getElementById("form");
+        console.log(form)
+        let data = new FormData(form);
+        console.log(data)
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "http://localhost:8080/api/students/upload",
+            data: data,
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 1000000,
+            success: function (data) {
+                // document.getElementById('main').innerHTML = `${data.name}<img src="\\image\\${data.image}">`
+                showList()
+            }
+        })
+    }
     showList();
 </script>
 </html>
