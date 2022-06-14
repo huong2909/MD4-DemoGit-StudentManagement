@@ -20,4 +20,5 @@ public class StudentController {
     public ResponseEntity<Iterable<Student>> findAll(){
 return new ResponseEntity<>(studentService.findAll(), HttpStatus.OK);
     }
+
 }
