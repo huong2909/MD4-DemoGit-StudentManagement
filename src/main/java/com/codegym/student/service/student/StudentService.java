@@ -1,5 +1,6 @@
 package com.codegym.student.service.student;
 
+import com.codegym.student.model.Clazz;
 import com.codegym.student.model.Student;
 import com.codegym.student.repository.IStudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +13,12 @@ public class StudentService implements IStudentService {
     @Autowired
     IStudentRepository studentRepository;
 
+public class StudentService implements IStudentService{
+@Autowired
+    IStudentRepository studentRepository;
     @Override
     public Iterable<Student> findAll() {
-        return null;
+        return studentRepository.findAll();
     }
 
     @Override
@@ -24,11 +28,21 @@ public class StudentService implements IStudentService {
 
     @Override
     public Student save(Student student) {
-        return null;
+        return studentRepository.save(student);
     }
 
     @Override
     public void remove(Long id) {
-        studentRepository.deleteById(id);
+studentRepository.deleteById(id);
+    }
+
+    @Override
+    public Iterable<Student> findAllByClazz(Clazz clazz) {
+        return studentRepository.findAllByClazz(clazz);
+    }
+
+    @Override
+    public Iterable<Student> findAllByOrderByMark() {
+        return studentRepository.findAllByOrderByMark();
     }
 }
