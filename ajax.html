@@ -57,6 +57,9 @@
         <div class="col-sm-12">
             <h1 style="color: darkgreen">STUDENT MANAGEMENT</h1>
         </div>
+        <div id="create">
+            <button style="background-color: darkseagreen"  onclick="formCreate() ">Create New Student</button>
+        </div>
     </div>
     <div class="row" style="margin-top: 7rem">
         <div class="col-sm-12">
@@ -90,8 +93,18 @@
     </div>
 
 </div>
+<div id="main"></div>
+<!--<form enctype="multipart/form-data" id="form">-->
+<!--    <input type="text" placeholder="Student Name" name="name ">-->
+<!--    <input type="number" placeholder="Age" name="age">-->
+<!--    <input type="number" placeholder="Mark Average" name="mark">-->
+<!--    <input type="number" placeholder="Class" name="clazz">-->
+<!--    <input type="file" name="file"/>-->
+<!--    <button type="button" onclick="submitForm()">Upload</button>-->
+<!--</form>-->
 </body>
 <script>
+    let createForm=document.getElementById("create");
     let display = document.getElementById("display");
 
     function showList() {
@@ -105,7 +118,7 @@
                     <td >${data[i].id}</td>
                     <td class="left">${data[i].name}</td>
                     <td>${data[i].age}</td>
-                    <td>${data[i].image}</td>
+                    <td><img style="height: 100px;width: 100px" src="\\image\\${data[i].image}"></td>
                     <td>${data[i].mark}</td>
                     <td>${data[i].clazz.name}</td>
                     <td><button class="btn btn-success" onclick="deleteStudent(${data[i].id})"><i class="bi bi-trash3-fill"></i></button></td>
@@ -119,7 +132,39 @@
             }
         });
     }
-
+function formCreate(){
+    let str = `
+    <form enctype="multipart/form-data" id="form">
+    <input type="text" name="name">
+    <input type="number" name="age">
+    <input type="number" name="mark">
+    <input type="number" name="clazz">
+    <input type="file" name="file"/>
+    <button type="button" onclick="submitForm()">Upload</button>
+</form>
+`
+    createForm.innerHTML=str;
+}
+    function submitForm() {
+        let form = document.getElementById("form");
+        console.log(form)
+        let data = new FormData(form);
+        console.log(data)
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "http://localhost:8080/api/students/upload",
+            data: data,
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 1000000,
+            success: function (data) {
+                // document.getElementById('main').innerHTML = `${data.name}<img src="\\image\\${data.image}">`
+                showList()
+            }
+        })
+    }
     showList();
 </script>
 </html>
