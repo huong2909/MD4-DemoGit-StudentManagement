@@ -11,5 +11,9 @@ public interface IStudentService extends IGeneralService<Student> {
 
     Iterable<Student> findAllByOrderByMark();
 
-    Page<Student> findAll(Pageable pageable);
+    Iterable<Student> findAllByNameContaining(String name);
+
+    Iterable<Student> findAllByMarkBetween(double from, double to);
+
+    Iterable<Student>findTop3Students();
 }

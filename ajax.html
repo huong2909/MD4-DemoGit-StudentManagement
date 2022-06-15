@@ -33,6 +33,11 @@
         text-align: left;
     }
 
+    .search {
+        margin-left: 53rem;
+        margin-top: 2rem;
+    }
+
     @media (min-width: 1024px) {
         .container {
             display: block;
@@ -59,6 +64,33 @@
             <h1 style="color: darkgreen">STUDENT MANAGEMENT</h1>
         </div>
     </div>
+    <div class="row d-inline-flex search">
+        <div class="input-group rounded">
+            <input type="text" id="searchByName" class="form-control rounded" placeholder="Search by name"
+                   aria-label="Search"
+                   aria-describedby="search-addon"/>
+            <span class="btn btn-danger" id="search-addon" onclick="findAllByNameContaining()">
+    <i class="bi bi-search-heart"></i>
+  </span>
+        </div>
+    </div>
+    <div class="row d-inline-flex" style="margin-left: 38rem;margin-top: 2rem">
+        <div class="input-group rounded">
+            <input type="number" id="from" class="form-control rounded" placeholder="Search by mark from..."
+                   aria-label="Search"
+                   aria-describedby="search-addon" style="margin-right: 2rem"/>
+            <input type="number" id="to" class="form-control rounded" placeholder="to"
+                   aria-label="Search"
+                   aria-describedby="search-addon"/>
+            <span class="btn btn-warning" onclick="findAllByMarkBetween()">
+    <i class="bi bi-search-heart"></i>
+  </span>
+        </div>
+    </div>
+    <div class="row d-inline-flex">
+        <button type="button" class="btn btn-outline-secondary btn-md" onclick="findTop3()">Find top 3</button>
+    </div>
+
     <div class="row" style="margin-top: 7rem">
         <div class="col-sm-2">
             <div class="row">
@@ -80,6 +112,7 @@
             <table border="1px" style="border: aquamarine" class="table">
                 <thead class="table-success">
                 <tr>
+                    <th scope="col">Id</th>
                     <th scope="col">Name</th>
                     <th scope="col">Age</th>
                     <th scope="col">Image</th>
@@ -227,9 +260,60 @@
             }
         })
 
+        }
+        document.getElementById("display").innerHTML = str;
+    }
+
+    function deleteStudent(id) {
+        $.ajax({
+            type: "DELETE",
+            url: "http://localhost:8080/api/students/" + id,
+            success: showList,
+            error: function () {
+                alert("Error!")
+            }
+        });
+    }
+
+    function findAllByNameContaining() {
+        let name = document.getElementById("searchByName").value;
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/api/students/find?name=" + name,
+            success: display,
+            error: function () {
+                alert("Error!")
+            }
+        });
+    }
+
+    function findAllByMarkBetween() {
+        let from = document.getElementById("from").value;
+        let to = document.getElementById("to").value;
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/api/students/find-between?from=" + from + "&to=" + to,
+            success: display,
+            error: function () {
+                alert("Error!")
+            }
+        });
+    }
+
+    function findTop3() {
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/api/students/find-top-3",
+            success: display,
+            error: function () {
+                alert("Error!")
+            }
+        });
     }
 
     showList();
+
+
     findAllClass();
 </script>
 </html>

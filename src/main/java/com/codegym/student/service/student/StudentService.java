@@ -9,10 +9,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
 @Service
-public class StudentService implements IStudentService{
-@Autowired
+public class StudentService implements IStudentService {
+    @Autowired
     IStudentRepository studentRepository;
+
     @Override
     public Iterable<Student> findAll() {
         return studentRepository.findAll();
@@ -30,7 +32,7 @@ public class StudentService implements IStudentService{
 
     @Override
     public void remove(Long id) {
-studentRepository.deleteById(id);
+        studentRepository.deleteById(id);
     }
 
     @Override
@@ -44,7 +46,24 @@ studentRepository.deleteById(id);
     }
 
     @Override
+    public Iterable<Student> findAllByNameContaining(String name) {
+        return studentRepository.findAllByNameContaining(name);
+    }
+
+    @Override
+    public Iterable<Student> findAllByMarkBetween(double from, double to) {
+        return studentRepository.findAllByMarkBetween(from,to);
+    }
+
+    @Override
     public Page<Student> findAll(Pageable pageable) {
         return studentRepository.findAll(pageable);
     }
 }
+
+    @Override
+    public Iterable<Student> findTop3Students() {
+        return studentRepository.findTop3Students();
+    }
+}
+
