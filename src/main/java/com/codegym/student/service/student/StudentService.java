@@ -36,8 +36,8 @@ public class StudentService implements IStudentService {
     }
 
     @Override
-    public Page<Student> findAllByClazz(Clazz clazz,Pageable pageable) {
-        return studentRepository.findAllByClazz(clazz,pageable);
+    public Page<Student> findAllByClazz(Clazz clazz, Pageable pageable) {
+        return studentRepository.findAllByClazz(clazz, pageable);
     }
 
     @Override
@@ -52,14 +52,13 @@ public class StudentService implements IStudentService {
 
     @Override
     public Iterable<Student> findAllByMarkBetween(double from, double to) {
-        return studentRepository.findAllByMarkBetween(from,to);
+        return studentRepository.findAllByMarkBetween(from, to);
     }
 
     @Override
     public Page<Student> findAll(Pageable pageable) {
         return studentRepository.findAll(pageable);
     }
-}
 
     @Override
     public Iterable<Student> findTop3Students() {

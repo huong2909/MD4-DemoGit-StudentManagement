@@ -21,15 +21,15 @@ public class StudentController {
     @Autowired
     IStudentService studentService;
 
-//    @GetMapping("")
+    //    @GetMapping("")
 //    public ResponseEntity<Iterable<Student>> findAll() {
 //        return new ResponseEntity<>(studentService.findAll(), HttpStatus.OK);
 //    }
     @GetMapping
-    public ResponseEntity<Iterable<Student>> findAllStudent(@PageableDefault(size = 2) Pageable pageable){
+    public ResponseEntity<Iterable<Student>> findAllStudent(@PageableDefault(size = 2) Pageable pageable) {
         Page<Student> students = studentService.findAll(pageable);
 
-        if (students.isEmpty()){
+        if (students.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(students, HttpStatus.OK);
@@ -51,6 +51,21 @@ public class StudentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         return ResponseEntity.ok(studentService.save(student));
+    }
+
+    @GetMapping("/find")
+    public ResponseEntity<Iterable<Student>> findAllByNameContaining(@RequestParam String name) {
+        return new ResponseEntity<>(studentService.findAllByNameContaining(name), HttpStatus.OK);
+    }
+
+    @GetMapping("/find-between")
+    public ResponseEntity<Iterable<Student>> findAllByMarkBetween(@RequestParam double from, double to) {
+        return new ResponseEntity<>(studentService.findAllByMarkBetween(from, to), HttpStatus.OK);
+    }
+
+    @GetMapping("/find-top-3")
+    public ResponseEntity<Iterable<Student>> findTop3Students() {
+        return new ResponseEntity<>(studentService.findTop3Students(), HttpStatus.OK);
     }
 
 }

@@ -16,4 +16,6 @@ public interface IStudentService extends IGeneralService<Student> {
     Iterable<Student> findAllByMarkBetween(double from, double to);
 
     Iterable<Student>findTop3Students();
+
+    Page<Student> findAll(Pageable pageable);
 }
