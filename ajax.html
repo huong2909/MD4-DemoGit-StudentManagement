@@ -22,6 +22,7 @@
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-latest.js"></script>
 </head>
 <style>
     td, th {
@@ -59,11 +60,26 @@
         </div>
     </div>
     <div class="row" style="margin-top: 7rem">
-        <div class="col-sm-12">
+        <div class="col-sm-2">
+            <div class="row">
+                <div class="col-sm-12">
+                    <table border="1px" style="border: aquamarine" class="table">
+                        <thead class="table-success">
+                        <tr>
+                            <th scope="col">Class</th>
+                        </tr>
+                        </thead>
+                        <tbody id="display1">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-10">
             <table border="1px" style="border: aquamarine" class="table">
                 <thead class="table-success">
                 <tr>
-                    <th scope="col">Id</th>
                     <th scope="col">Name</th>
                     <th scope="col">Age</th>
                     <th scope="col">Image</th>
@@ -72,20 +88,16 @@
                     <th scope="col" colspan="2" style="text-align: center">Actions</th>
                 </tr>
                 </thead>
-                <tbody id="display">
-                <!--    <tr>-->
-                <!--        <td>1</td>-->
-                <!--        <td>2</td>-->
-                <!--        <td>3</td>-->
-                <!--        <td>4</td>-->
-                <!--        <td>5</td>-->
-                <!--        <td>6</td>-->
-                <!--        <td>Delete</td>-->
-                <!--        <td>Edit</td>-->
-                <!--    </tr>-->
+                <tbody id="display" class="button1">
+
 
                 </tbody>
             </table>
+        </div>
+    </div>
+    <div class="row" STYLE="text-align: center">
+        <div class="col-sm-12" id="load-btn">
+            <button class="btn btn-success" onclick="loadMore()"> Load more</button>
         </div>
     </div>
 
@@ -101,17 +113,36 @@
 </form>
 </body>
 <script>
-    let display = document.getElementById("display");
 
-    function showList() {
+    let display = document.getElementById("display");
+    let display1 = document.getElementById("display1");
+    let studentPage = 0;
+    let currentCategory = 0;
+
+    // show danh sach học sinh
+    function showList(page) {
+
+        if (!page) {
+            page = 0;
+        }
         $.ajax({
             type: "GET",
-            url: "http://localhost:8080/api/students",
+            url: "http://localhost:8080/api/students?page=" + page,
             success: function (data) {
-                let str = "";
-                for (let i = 0; i < data.length; i++) {
-                    str += `    <tr>
-                    <td >${data[i].id}</td>
+                getStudent(data.content)
+            },
+            error: function () {
+                alert('loi')
+            }
+        });
+    }
+
+    // form lấy dữ liệu toàn bộ học sinh
+    function getStudent(data) {
+        let str = "";
+        for (let i = 0; i < data.length; i++) {
+            str += `    <tr>
+
                     <td class="left">${data[i].name}</td>
                     <td>${data[i].age}</td>
                     <td><img style="height: 100px;width: 100px" src="\\image\\${data[i].image}"></td>
@@ -120,15 +151,11 @@
                     <td><button class="btn btn-success" onclick="deleteStudent(${data[i].id})"><i class="bi bi-trash3-fill"></i></button></td>
                     <td><button class="btn btn-success" onclick="formEditStudent(${data[i].id})"><i class="bi bi-pen-fill"></i></button></td>
                 </tr>`
-                }
-                display.innerHTML = str;
-            },
-            error: function () {
-                alert('loi')
-            }
-        });
+        }
+        $('.button1').append(str);
     }
 
+    // upload ảnh
     function submitForm() {
         let form = document.getElementById("form");
         console.log(form)
@@ -149,6 +176,60 @@
             }
         })
     }
+
+    // load more
+    function loadMore() {
+        studentPage = studentPage + 1;
+        if (currentCategory == 0) {
+            showList(studentPage)
+        } else {
+            findAllStudentByClass(currentCategory, studentPage);
+        }
+    }
+
+    // show lớp
+    function findAllClass() {
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/api/clazz",
+            success: function (data) {
+                let content = "";
+                console.log(data)
+                for (let i = 0; i < data.length; i++) {
+                    content += `<tr>
+            <td><a href="#" onclick="findAllStudentByClass(${data[i].id}); ">${data[i].name}</a></td>
+        </tr>`;
+                }
+                document.getElementById("display1").innerHTML = content;
+            }, error: function (error) {
+                console.log(error);
+            }
+        })
+    }
+
+    function findAllStudentByClass(id, page) {
+        if (!page) {
+            page = 0;
+        }
+        if (currentCategory != id) {
+            document.getElementById("display").innerHTML = "";
+            studentPage = 0; //set lại page về 0 để in ra từ đầu
+        }
+        currentCategory = id;
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/api/clazz/view-clazz/" + id + "?page=" + page,
+            success: function (data) {
+                console.log(data)
+                getStudent(data.content)
+            }, error: function (error) {
+                console.log(error);
+            }
+        })
+
+    }
+
     showList();
+    findAllClass();
 </script>
 </html>

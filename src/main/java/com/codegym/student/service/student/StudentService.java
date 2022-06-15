@@ -4,6 +4,8 @@ import com.codegym.student.model.Clazz;
 import com.codegym.student.model.Student;
 import com.codegym.student.repository.IStudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -32,12 +34,17 @@ studentRepository.deleteById(id);
     }
 
     @Override
-    public Iterable<Student> findAllByClazz(Clazz clazz) {
-        return studentRepository.findAllByClazz(clazz);
+    public Page<Student> findAllByClazz(Clazz clazz,Pageable pageable) {
+        return studentRepository.findAllByClazz(clazz,pageable);
     }
 
     @Override
     public Iterable<Student> findAllByOrderByMark() {
         return studentRepository.findAllByOrderByMark();
+    }
+
+    @Override
+    public Page<Student> findAll(Pageable pageable) {
+        return studentRepository.findAll(pageable);
     }
 }

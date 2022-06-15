@@ -5,6 +5,9 @@ import com.codegym.student.model.Student;
 import com.codegym.student.service.clazz.IClazzService;
 import com.codegym.student.service.student.IStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -37,13 +40,13 @@ public class ClazzController {
     }
 
     @GetMapping("/view-clazz/{id}")
-    public ResponseEntity<Iterable<Student>> getStudentByCategory(@PathVariable("id") Long id){
+    public ResponseEntity<Iterable<Student>> getStudentByCategory(@PathVariable("id") Long id, @PageableDefault(size = 2) Pageable pageable) {
         Optional<Clazz> clazz = clazzService.findById(id);
-        if(!clazz.isPresent()){
+        if (!clazz.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        List<Student> students = (List<Student>) studentService.findAllByClazz(clazz.get());
+        Page<Student> students = studentService.findAllByClazz(clazz.get(), pageable);
         if (students.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
