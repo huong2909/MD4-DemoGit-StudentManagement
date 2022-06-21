@@ -21,8 +21,13 @@
             integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2"
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-latest.js"></script>
+    <script src="script.js"></script>
 </head>
 <style>
     td, th {
@@ -58,8 +63,9 @@
     }
 </style>
 <body>
+
 <div class="container">
-    <div class="row" style="margin-top:4rem ;text-align: center">
+    <div class="row" style="margin-top:2rem ;text-align: center">
         <div class="col-sm-12">
             <h1 style="color: darkgreen">STUDENT MANAGEMENT</h1>
         </div>
@@ -88,10 +94,59 @@
         </div>
     </div>
     <div class="row d-inline-flex">
-        <button type="button" class="btn btn-outline-secondary btn-md" onclick="findTop3()">Find top 3</button>
+            <div class="col-sm-7">
+
+                <button type="button" class="btn btn-outline-secondary btn-md" onclick="findTop3()">Find top 3</button>
+            </div>
+        <div class="col-sm-5">
+            <!--  form  them moi-->
+            <form enctype="multipart/form-data" id="form">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Create</button>
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Create New Student</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="createProduct">
+                                    <div class="input-group mb-3">
+                                        <span id="validateName"></span>
+                                        <span class="input-group-text">Name</span>
+                                        <input type="text" class="form-control" placeholder="Enter the name..." aria-label="name" aria-describedby="basic-addon1" name="name">
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">Age</span>
+                                        <input type="number" class="form-control" placeholder="Enter the price..." aria-label="price" aria-describedby="basic-addon1" name="age">
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">Mark</span>
+                                        <input type="number" class="form-control" placeholder="Enter the price..." aria-label="price" aria-describedby="basic-addon1" name="mark">
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">Clazz</span>
+                                        <input type="number" class="form-control" placeholder="Enter the price..." aria-label="price" aria-describedby="basic-addon1" name="clazz">
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">Image</span>
+                                        <input type="file" class="form-control" placeholder="Enter the price..." aria-label="price" aria-describedby="basic-addon1" name="file">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="createStudent()">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <div class="row" style="margin-top: 7rem">
+    <div id="showFormEdit"></div>
+    <div class="row" style="margin-top: 2rem">
         <div class="col-sm-2">
             <div class="row">
                 <div class="col-sm-12">
@@ -133,185 +188,15 @@
 
 </div>
 <div id="main"></div>
-<form enctype="multipart/form-data" id="form">
-    <input type="text" name="name">
-    <input type="number" name="age">
-    <input type="number" name="mark">
-    <input type="number" name="clazz">
-    <input type="file" name="file"/>
-    <button type="button" onclick="createStudent()">Upload</button>
-</form>
+<!--<form enctype="multipart/form-data" id="form">-->
+<!--    <input type="text" name="name">-->
+<!--    <input type="number" name="age">-->
+<!--    <input type="number" name="mark">-->
+<!--    <input type="number" name="clazz">-->
+<!--    <input type="file" name="file"/>-->
+<!--    <button type="button" onclick="createStudent()">Upload</button>-->
+<!--</form>-->
+
 </body>
-<script>
-
-    let display = document.getElementById("display");
-    let display1 = document.getElementById("display1");
-    let studentPage = 0;
-    let currentCategory = 0;
-
-    // show danh sach học sinh
-    function showList(page) {
-
-        if (!page) {
-            page = 0;
-        }
-        $.ajax({
-            type: "GET",
-            url: "http://localhost:8080/api/students?page=" + page,
-            success: function (data) {
-                getStudent(data.content)
-            },
-            error: function () {
-                alert('loi')
-            }
-        });
-    }
-
-    // form lấy dữ liệu toàn bộ học sinh
-    function getStudent(data) {
-        let str = "";
-        for (let i = 0; i < data.length; i++) {
-            str += `    <tr>
-
-                    <td class="left">${data[i].name}</td>
-                    <td>${data[i].age}</td>
-                    <td><img style="height: 100px;width: 100px" src="\\image\\${data[i].image}"></td>
-                    <td>${data[i].mark}</td>
-                    <td>${data[i].clazz.name}</td>
-                    <td><button class="btn btn-success" onclick="deleteStudent(${data[i].id})"><i class="bi bi-trash3-fill"></i></button></td>
-                    <td><button class="btn btn-success" onclick="formEditStudent(${data[i].id})"><i class="bi bi-pen-fill"></i></button></td>
-                </tr>`
-        }
-        $('.button1').append(str);
-    }
-
-    // upload ảnh
-    function createStudent() {
-        let form = document.getElementById("form");
-        console.log(form)
-        let data = new FormData(form);
-        console.log(data)
-        $.ajax({
-            type: "POST",
-            enctype: 'multipart/form-data',
-            url: "http://localhost:8080/api/students/upload",
-            data: data,
-            processData: false,
-            contentType: false,
-            cache: false,
-            timeout: 1000000,
-            success: function (data) {
-                // document.getElementById('main').innerHTML = `${data.name}<img src="\\image\\${data.image}">`
-                // showList()
-                alert("Thêm thành công");
-            }
-        })
-    }
-
-    // load more
-    function loadMore() {
-        studentPage = studentPage + 1;
-        if (currentCategory == 0) {
-            showList(studentPage)
-        } else {
-            findAllStudentByClass(currentCategory, studentPage);
-        }
-    }
-
-    // show lớp
-    function findAllClass() {
-        $.ajax({
-            type: "GET",
-            url: "http://localhost:8080/api/clazz",
-            success: function (data) {
-                let content = "";
-                console.log(data)
-                for (let i = 0; i < data.length; i++) {
-                    content += `<tr>
-            <td><a href="#" onclick="findAllStudentByClass(${data[i].id}); ">${data[i].name}</a></td>
-        </tr>`;
-                }
-                document.getElementById("display1").innerHTML = content;
-            }, error: function (error) {
-                console.log(error);
-            }
-        })
-    }
-
-    function findAllStudentByClass(id, page) {
-        if (!page) {
-            page = 0;
-        }
-        if (currentCategory != id) {
-            document.getElementById("display").innerHTML = "";
-            studentPage = 0; //set lại page về 0 để in ra từ đầu
-        }
-        currentCategory = id;
-        $.ajax({
-            type: "GET",
-            url: "http://localhost:8080/api/clazz/view-clazz/" + id + "?page=" + page,
-            success: function (data) {
-                console.log(data)
-                getStudent(data.content)
-            }, error: function (error) {
-                console.log(error);
-            }
-        })
-
-        }
-        // document.getElementById("display").innerHTML = str;
-        //
-
-    function deleteStudent(id) {
-        $.ajax({
-            type: "DELETE",
-            url: "http://localhost:8080/api/students/" + id,
-            success: showList,
-            error: function () {
-                alert("Error!")
-            }
-        });
-    }
-
-    function findAllByNameContaining() {
-        let name = document.getElementById("searchByName").value;
-        $.ajax({
-            type: "GET",
-            url: "http://localhost:8080/api/students/find?name=" + name,
-            success: display,
-            error: function () {
-                alert("Error!")
-            }
-        });
-    }
-
-    function findAllByMarkBetween() {
-        let from = document.getElementById("from").value;
-        let to = document.getElementById("to").value;
-        $.ajax({
-            type: "GET",
-            url: "http://localhost:8080/api/students/find-between?from=" + from + "&to=" + to,
-            success: display,
-            error: function () {
-                alert("Error!")
-            }
-        });
-    }
-
-    function findTop3() {
-        $.ajax({
-            type: "GET",
-            url: "http://localhost:8080/api/students/find-top-3",
-            success: display,
-            error: function () {
-                alert("Error!")
-            }
-        });
-    }
-
-    showList();
-
-
-    findAllClass();
-</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </html>

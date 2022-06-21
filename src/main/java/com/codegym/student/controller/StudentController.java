@@ -9,10 +9,12 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.Optional;
 
 @Controller
 @CrossOrigin("*")
@@ -21,10 +23,6 @@ public class StudentController {
     @Autowired
     IStudentService studentService;
 
-    //    @GetMapping("")
-//    public ResponseEntity<Iterable<Student>> findAll() {
-//        return new ResponseEntity<>(studentService.findAll(), HttpStatus.OK);
-//    }
     @GetMapping
     public ResponseEntity<Iterable<Student>> findAllStudent(@PageableDefault(size = 2) Pageable pageable) {
         Page<Student> students = studentService.findAll(pageable);
@@ -66,6 +64,38 @@ public class StudentController {
     @GetMapping("/find-top-3")
     public ResponseEntity<Iterable<Student>> findTop3Students() {
         return new ResponseEntity<>(studentService.findTop3Students(), HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<Student> update(@RequestParam("file") MultipartFile file, Student student, @PathVariable Long id) {
+        Optional<Student> studentOptional = studentService.findById(id);
+        String fileName = file.getOriginalFilename();
+        if (fileName.equals("")) {
+            student.setImage(studentOptional.get().getImage());
+        }
+        student.setImage(fileName);
+        if (!studentOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        student.setId(studentOptional.get().getId());
+
+        try {
+            file.transferTo(new File("D:\\BT-MD4\\MD4-Demogit-StudentManagement\\image\\" + fileName));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        studentService.save(student);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Student> findById(@PathVariable Long id) {
+        Optional<Student> studentOptional = studentService.findById(id);
+        if (!studentOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(studentOptional.get(), HttpStatus.OK);
     }
 
 }
